@@ -19,6 +19,10 @@ config/name="Screaming Chinese Camera"
 run/main_scene="res://Try hard.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Cam_Globals="*res://Cam_Globals.gd"
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"
