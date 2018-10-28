@@ -1,13 +1,22 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Camera_State_Machine.gd" type="Script" id=1]
 [ext_resource path="res://Cam_Globals.gd" type="Script" id=2]
-[ext_resource path="res://Free_Look.gd" type="Script" id=3]
-[ext_resource path="res://Lerp_In.gd" type="Script" id=4]
-[ext_resource path="res://Lerp_Out.gd" type="Script" id=5]
-[ext_resource path="res://Collision_Position.gd" type="Script" id=6]
+[ext_resource path="res://Camera_Interface.gd" type="Script" id=3]
+[ext_resource path="res://Free_Look.gd" type="Script" id=4]
+[ext_resource path="res://Lerp_In.gd" type="Script" id=5]
+[ext_resource path="res://Lerp_Out.gd" type="Script" id=6]
+[ext_resource path="res://Collision_Position.gd" type="Script" id=7]
+[ext_resource path="res://Slide_Boi.gd" type="Script" id=8]
+[ext_resource path="res://UnityBoi.gd" type="Script" id=9]
+[ext_resource path="res://Movement.gd" type="Script" id=10]
 
-[sub_resource type="CubeMesh" id=1]
+[sub_resource type="SphereShape" id=1]
+
+margin = 0.04
+radius = 1.0
+
+[sub_resource type="CubeMesh" id=2]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
@@ -16,7 +25,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="SpatialMaterial" id=2]
+[sub_resource type="SpatialMaterial" id=3]
 
 render_priority = 0
 flags_transparent = false
@@ -72,12 +81,12 @@ proximity_fade_enable = false
 distance_fade_mode = 0
 _sections_unfolded = [ "Albedo" ]
 
-[sub_resource type="ConvexPolygonShape" id=3]
+[sub_resource type="ConvexPolygonShape" id=4]
 
 margin = 0.04
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
-[sub_resource type="CubeMesh" id=4]
+[sub_resource type="CubeMesh" id=5]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
@@ -86,7 +95,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="SpatialMaterial" id=5]
+[sub_resource type="SpatialMaterial" id=6]
 
 render_priority = 0
 flags_transparent = false
@@ -142,12 +151,12 @@ proximity_fade_enable = false
 distance_fade_mode = 0
 _sections_unfolded = [ "Albedo" ]
 
-[sub_resource type="ConvexPolygonShape" id=6]
+[sub_resource type="ConvexPolygonShape" id=7]
 
 margin = 0.04
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
-[sub_resource type="Shader" id=7]
+[sub_resource type="Shader" id=8]
 
 code = "shader_type canvas_item;
 render_mode blend_mix;
@@ -158,13 +167,13 @@ void fragment(){
 }
 "
 
-[sub_resource type="ShaderMaterial" id=8]
+[sub_resource type="ShaderMaterial" id=9]
 
 render_priority = 0
-shader = SubResource( 7 )
+shader = SubResource( 8 )
 _sections_unfolded = [ "shader" ]
 
-[sub_resource type="PrismMesh" id=9]
+[sub_resource type="PrismMesh" id=10]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
@@ -174,7 +183,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="SpatialMaterial" id=10]
+[sub_resource type="SpatialMaterial" id=11]
 
 render_priority = 0
 flags_transparent = false
@@ -232,8 +241,25 @@ _sections_unfolded = [ "Albedo", "Roughness" ]
 
 [node name="Node" type="Node"]
 
-[node name="Camera" type="Camera" parent="."]
-transform = Transform( -1, 0, -8.74228e-008, 0, 1, 0, 8.74228e-008, 0, -1, 0, 6.00078, -10 )
+[node name="KinematicBody" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10 )
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 1
+collision_mask = 1
+move_lock_x = false
+move_lock_y = false
+move_lock_z = false
+collision/safe_margin = 0.005
+_sections_unfolded = [ "Transform", "collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="KinematicBody"]
+shape = SubResource( 1 )
+disabled = false
+_sections_unfolded = [ "Transform", "shape" ]
+
+[node name="Camera" type="Camera" parent="KinematicBody"]
+transform = Transform( -1, 0, -8.74228e-008, 0, 1, 0, 8.74228e-008, 0, -1, 0, 0, 0 )
 keep_aspect = 1
 cull_mask = 1048575
 environment = null
@@ -249,20 +275,31 @@ far = 100.0
 script = ExtResource( 1 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="States" type="Node" parent="Camera"]
+[node name="Globals" type="Node" parent="KinematicBody/Camera"]
 script = ExtResource( 2 )
 
-[node name="Free_Look" type="Node" parent="Camera/States"]
+[node name="States" type="Node" parent="KinematicBody/Camera"]
 script = ExtResource( 3 )
 
-[node name="Lerp_In" type="Node" parent="Camera/States"]
+[node name="Free_Look" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 4 )
 
-[node name="Lerp_Out" type="Node" parent="Camera/States"]
+[node name="Lerp_In" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 5 )
 
-[node name="Collision_Position" type="Node" parent="Camera/States"]
+[node name="Lerp_Out" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 6 )
+
+[node name="Collision_Position" type="Node" parent="KinematicBody/Camera/States"]
+script = ExtResource( 7 )
+
+[node name="Slide_Boi" type="Node" parent="KinematicBody/Camera/States"]
+script = ExtResource( 8 )
+
+[node name="UnityBoi" type="Node" parent="KinematicBody/Camera/States"]
+script = ExtResource( 9 )
+mouseSens = 4.0
+damp = 25.0
 
 [node name="OmniLight" type="OmniLight" parent="."]
 layers = 1
@@ -295,9 +332,9 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 1 )
+mesh = SubResource( 2 )
 skeleton = NodePath("..")
-material/0 = SubResource( 2 )
+material/0 = SubResource( 3 )
 _sections_unfolded = [ "Transform", "material" ]
 
 [node name="StaticBody" type="StaticBody" parent="A"]
@@ -308,10 +345,12 @@ collision_mask = 1
 physics_material_override = null
 constant_linear_velocity = Vector3( 0, 0, 0 )
 constant_angular_velocity = Vector3( 0, 0, 0 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="A/StaticBody"]
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 disabled = false
+_sections_unfolded = [ "Transform" ]
 
 [node name="B" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 10.46, 0, 0, 0, 30, 5, 0, 0 )
@@ -324,9 +363,9 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 4 )
+mesh = SubResource( 5 )
 skeleton = NodePath("..")
-material/0 = SubResource( 5 )
+material/0 = SubResource( 6 )
 _sections_unfolded = [ "Transform", "material" ]
 
 [node name="StaticBody" type="StaticBody" parent="B"]
@@ -337,13 +376,16 @@ collision_mask = 1
 physics_material_override = null
 constant_linear_velocity = Vector3( 0, 0, 0 )
 constant_angular_velocity = Vector3( 0, 0, 0 )
+_sections_unfolded = [ "Transform" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="B/StaticBody"]
-shape = SubResource( 6 )
+shape = SubResource( 7 )
 disabled = false
+_sections_unfolded = [ "Transform" ]
 
 [node name="Debug" type="Panel" parent="."]
-material = SubResource( 8 )
+editor/display_folded = true
+material = SubResource( 9 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -397,7 +439,167 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Margin" ]
 
-[node name="Mavis" type="MeshInstance" parent="."]
+[node name="Key1" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 20.0
+margin_right = 42.0
+margin_bottom = 34.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Key2" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 40.0
+margin_right = 42.0
+margin_bottom = 54.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Key3" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 60.0
+margin_right = 42.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Key4" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 2.0
+margin_top = 80.0
+margin_right = 42.0
+margin_bottom = 94.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Value1" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 100.0
+margin_top = 20.0
+margin_right = 140.0
+margin_bottom = 34.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Value2" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 100.0
+margin_top = 40.0
+margin_right = 140.0
+margin_bottom = 54.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Value3" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 100.0
+margin_top = 60.0
+margin_right = 140.0
+margin_bottom = 74.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Value4" type="Label" parent="Debug"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 100.0
+margin_top = 80.0
+margin_right = 140.0
+margin_bottom = 94.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Rect" ]
+
+[node name="Target" type="MeshInstance" parent="."]
 layers = 1
 material_override = null
 cast_shadow = 1
@@ -407,8 +609,9 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 9 )
+mesh = SubResource( 10 )
 skeleton = NodePath("..")
-material/0 = SubResource( 10 )
+material/0 = SubResource( 11 )
+script = ExtResource( 10 )
 _sections_unfolded = [ "material", "mesh" ]
 
