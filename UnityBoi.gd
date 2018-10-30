@@ -17,9 +17,11 @@ var hit
 
 func enter():
 	ray = RayCast.new()
-	camera.add_child(ray)
+	target.add_child(ray)
+#	camera.add_child(ray)
 #	$"/root/Node/KinematicBody".add_child(ray)
 	ray.enabled = true
+	ray.set_collision_mask_bit(0, true)
 	
 	previousRotation = Quat(camera.global_transform.basis)
 	offset = camera.global_transform.origin - target.global_transform.origin
@@ -65,9 +67,11 @@ func write_label(label, content):
 func debug():	
 	write_label("Key1", "collision: ")
 	write_label("Value1", str(hit))
-	write_label("Key2", "distance:")
-	write_label("Value2", str(get_node("/root/Node/KinematicBody/Camera").get_global_transform().origin.distance_to(target.global_transform.origin)))
-#	globals.write_label("Key3", "vel:")
-#	globals.write_label("Value3", str(vel))
+#	write_label("Key2", "distance:")
+#	write_label("Value2", str(get_node("/root/Node/KinematicBody/Camera").get_global_transform().origin.distance_to(target.global_transform.origin)))
+	write_label("Key2", "cam pos:")
+	write_label("Value2", str(camera.global_transform.origin))
+	write_label("Key3", "ray pos:")
+	write_label("Value3", str(ray.global_transform.origin))
 
 #	Line.new()

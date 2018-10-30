@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Screaming Chinese Camera"
+config/name="Camera Tryouts"
 run/main_scene="res://Try hard.tscn"
 config/icon="res://icon.png"
 
