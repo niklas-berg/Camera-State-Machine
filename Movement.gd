@@ -23,6 +23,6 @@ func _physics_process(delta):
 	if(Input.is_action_pressed("crouch")):
 		dir[1] += -0.1
 
-	dir = dir.normalized()
+	dir = dir.normalized() * 0.25
 
 	$"/root/Node/Target".global_transform.origin += dir

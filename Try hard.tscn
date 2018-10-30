@@ -245,13 +245,13 @@ _sections_unfolded = [ "Albedo", "Roughness" ]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10 )
 input_ray_pickable = true
 input_capture_on_drag = false
-collision_layer = 1
-collision_mask = 1
+collision_layer = 2
+collision_mask = 2
 move_lock_x = false
 move_lock_y = false
 move_lock_z = false
 collision/safe_margin = 0.005
-_sections_unfolded = [ "Transform", "collision" ]
+_sections_unfolded = [ "Collision", "Transform", "collision" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="KinematicBody"]
 shape = SubResource( 1 )
