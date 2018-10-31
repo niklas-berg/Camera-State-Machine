@@ -17,11 +17,16 @@ _global_script_class_icons={
 
 config/name="Camera Tryouts"
 run/main_scene="res://Try hard.tscn"
+run/low_processor_mode=true
 config/icon="res://icon.png"
 
 [autoload]
 
 Cam_Globals="*res://Cam_Globals.gd"
+
+[display]
+
+window/size/fullscreen=true
 
 [input]
 
@@ -66,4 +71,9 @@ crouch={
 
 [rendering]
 
+quality/reflections/high_quality_ggx=false
+quality/subsurface_scattering/quality=0
+quality/subsurface_scattering/weight_samples=false
+quality/voxel_cone_tracing/high_quality=false
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"
