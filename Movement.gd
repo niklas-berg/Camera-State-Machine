@@ -36,6 +36,7 @@ func _process(delta):
 	preA = target.global_transform.origin
 
 func _physics_process(delta):
-	target.global_transform.origin = target.global_transform.origin.cubic_interpolate(desiredPos, preA, postB, delta * 25.0)
+#	target.global_transform.origin = target.global_transform.origin.cubic_interpolate(desiredPos, preA, postB, delta * 25.0)
+	target.global_transform.origin = desiredPos
 
 	

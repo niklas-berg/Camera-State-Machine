@@ -1,16 +1,17 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=28 format=2]
 
-[ext_resource path="res://Camera_State_Machine.gd" type="Script" id=1]
-[ext_resource path="res://Cam_Globals.gd" type="Script" id=2]
-[ext_resource path="res://Camera_Interface.gd" type="Script" id=3]
-[ext_resource path="res://Free_Look.gd" type="Script" id=4]
-[ext_resource path="res://Lerp_In.gd" type="Script" id=5]
-[ext_resource path="res://Lerp_Out.gd" type="Script" id=6]
-[ext_resource path="res://Collision_Position.gd" type="Script" id=7]
-[ext_resource path="res://Slide_Boi.gd" type="Script" id=8]
-[ext_resource path="res://UnityBoi.gd" type="Script" id=9]
-[ext_resource path="res://Assets/shogi.png" type="Texture" id=10]
-[ext_resource path="res://Movement.gd" type="Script" id=11]
+[ext_resource path="res://KinematicBody.gd" type="Script" id=1]
+[ext_resource path="res://Camera_State_Machine.gd" type="Script" id=2]
+[ext_resource path="res://Cam_Globals.gd" type="Script" id=3]
+[ext_resource path="res://Camera_Interface.gd" type="Script" id=4]
+[ext_resource path="res://Free_Look.gd" type="Script" id=5]
+[ext_resource path="res://Lerp_In.gd" type="Script" id=6]
+[ext_resource path="res://Lerp_Out.gd" type="Script" id=7]
+[ext_resource path="res://Collision_Position.gd" type="Script" id=8]
+[ext_resource path="res://Slide_Boi.gd" type="Script" id=9]
+[ext_resource path="res://UnityBoi.gd" type="Script" id=10]
+[ext_resource path="res://Assets/shogi.png" type="Texture" id=11]
+[ext_resource path="res://Movement.gd" type="Script" id=12]
 
 [sub_resource type="SphereShape" id=1]
 
@@ -157,7 +158,7 @@ _sections_unfolded = [ "Albedo" ]
 margin = 0.04
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
-[sub_resource type="SpatialMaterial" id=12]
+[sub_resource type="SpatialMaterial" id=8]
 
 render_priority = 0
 flags_transparent = false
@@ -185,7 +186,7 @@ params_billboard_keep_scale = false
 params_grow = false
 params_use_alpha_scissor = false
 albedo_color = Color( 1, 1, 1, 1 )
-albedo_texture = ExtResource( 10 )
+albedo_texture = ExtResource( 11 )
 metallic = 0.0
 metallic_specular = 0.5
 metallic_texture_channel = 0
@@ -214,16 +215,16 @@ proximity_fade_enable = false
 distance_fade_mode = 0
 _sections_unfolded = [ "Albedo", "Flags", "Parameters" ]
 
-[sub_resource type="PlaneMesh" id=13]
+[sub_resource type="PlaneMesh" id=9]
 
-material = SubResource( 12 )
+material = SubResource( 8 )
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
 size = Vector2( 2, 2 )
 subdivide_width = 0
 subdivide_depth = 0
 
-[sub_resource type="Shader" id=8]
+[sub_resource type="Shader" id=10]
 
 code = "shader_type canvas_item;
 render_mode blend_mix;
@@ -234,13 +235,29 @@ void fragment(){
 }
 "
 
-[sub_resource type="ShaderMaterial" id=9]
+[sub_resource type="ShaderMaterial" id=11]
 
 render_priority = 0
-shader = SubResource( 8 )
+shader = SubResource( 10 )
 _sections_unfolded = [ "shader" ]
 
-[sub_resource type="PrismMesh" id=10]
+[sub_resource type="Shader" id=12]
+
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+void fragment(){
+
+	COLOR = vec4(0.0, 0.0, 0.0, 0.5);
+}
+"
+
+[sub_resource type="ShaderMaterial" id=13]
+
+render_priority = 0
+shader = SubResource( 12 )
+
+[sub_resource type="PrismMesh" id=14]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
@@ -250,7 +267,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="SpatialMaterial" id=11]
+[sub_resource type="SpatialMaterial" id=15]
 
 render_priority = 0
 flags_transparent = false
@@ -307,6 +324,7 @@ distance_fade_mode = 0
 _sections_unfolded = [ "Albedo", "Roughness" ]
 
 [node name="Node" type="Node"]
+_sections_unfolded = [ "Pause", "Script" ]
 
 [node name="KinematicBody" type="KinematicBody" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10 )
@@ -318,9 +336,11 @@ move_lock_x = false
 move_lock_y = false
 move_lock_z = false
 collision/safe_margin = 0.005
+script = ExtResource( 1 )
 _sections_unfolded = [ "Collision", "Transform", "collision" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="KinematicBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.56764 )
 shape = SubResource( 1 )
 disabled = false
 _sections_unfolded = [ "Transform", "shape" ]
@@ -339,34 +359,34 @@ fov = 70.0
 size = 1.0
 near = 0.05
 far = 100.0
-script = ExtResource( 1 )
+script = ExtResource( 2 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="Globals" type="Node" parent="KinematicBody/Camera"]
-script = ExtResource( 2 )
-
-[node name="States" type="Node" parent="KinematicBody/Camera"]
 script = ExtResource( 3 )
 
-[node name="Free_Look" type="Node" parent="KinematicBody/Camera/States"]
+[node name="States" type="Node" parent="KinematicBody/Camera"]
 script = ExtResource( 4 )
 
-[node name="Lerp_In" type="Node" parent="KinematicBody/Camera/States"]
+[node name="Free_Look" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 5 )
 
-[node name="Lerp_Out" type="Node" parent="KinematicBody/Camera/States"]
+[node name="Lerp_In" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 6 )
 
-[node name="Collision_Position" type="Node" parent="KinematicBody/Camera/States"]
+[node name="Lerp_Out" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 7 )
 
-[node name="Slide_Boi" type="Node" parent="KinematicBody/Camera/States"]
+[node name="Collision_Position" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 8 )
 
-[node name="UnityBoi" type="Node" parent="KinematicBody/Camera/States"]
+[node name="Slide_Boi" type="Node" parent="KinematicBody/Camera/States"]
 script = ExtResource( 9 )
+
+[node name="UnityBoi" type="Node" parent="KinematicBody/Camera/States"]
+script = ExtResource( 10 )
 mouseSens = 0.5
-damp = 15.0
+damp = 30.0
 
 [node name="OmniLight" type="OmniLight" parent="."]
 layers = 1
@@ -389,9 +409,8 @@ omni_shadow_mode = 1
 omni_shadow_detail = 1
 
 [node name="A" type="MeshInstance" parent="."]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 6.8, 0, 0, 0, 1, -5.91625, 2.33723, 15.2674 )
-layers = 1
+layers = 3
 material_override = null
 cast_shadow = 1
 extra_cull_margin = 0.0
@@ -408,12 +427,12 @@ _sections_unfolded = [ "Transform", "material" ]
 [node name="StaticBody" type="StaticBody" parent="A"]
 input_ray_pickable = true
 input_capture_on_drag = false
-collision_layer = 1
-collision_mask = 1
+collision_layer = 3
+collision_mask = 3
 physics_material_override = null
 constant_linear_velocity = Vector3( 0, 0, 0 )
 constant_angular_velocity = Vector3( 0, 0, 0 )
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Collision", "Matrix", "Transform" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="A/StaticBody"]
 shape = SubResource( 4 )
@@ -421,9 +440,8 @@ disabled = false
 _sections_unfolded = [ "Transform", "Visibility" ]
 
 [node name="B" type="MeshInstance" parent="."]
-editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 10.46, 0, 0, 0, 30, 5, 0, 0 )
-layers = 1
+layers = 3
 material_override = null
 cast_shadow = 1
 extra_cull_margin = 0.0
@@ -440,12 +458,12 @@ _sections_unfolded = [ "Transform", "material" ]
 [node name="StaticBody" type="StaticBody" parent="B"]
 input_ray_pickable = true
 input_capture_on_drag = false
-collision_layer = 1
-collision_mask = 1
+collision_layer = 3
+collision_mask = 3
 physics_material_override = null
 constant_linear_velocity = Vector3( 0, 0, 0 )
 constant_angular_velocity = Vector3( 0, 0, 0 )
-_sections_unfolded = [ "Transform" ]
+_sections_unfolded = [ "Collision", "Transform" ]
 
 [node name="CollisionShape" type="CollisionShape" parent="B/StaticBody"]
 shape = SubResource( 7 )
@@ -463,14 +481,70 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 13 )
+mesh = SubResource( 9 )
 skeleton = NodePath("..")
 material/0 = null
 _sections_unfolded = [ "Geometry", "Transform", "Visibility", "mesh" ]
 
+[node name="FpsPanel" type="Panel" parent="."]
+material = SubResource( 11 )
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 940.0
+margin_top = -1.0
+margin_right = 1025.0
+margin_bottom = 32.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Material", "material" ]
+
+[node name="FpsLabel" type="Label" parent="FpsPanel"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 36.0
+margin_top = 9.0
+margin_right = 76.0
+margin_bottom = 23.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label" type="Label" parent="FpsPanel"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 5.0
+margin_top = 9.0
+margin_right = 45.0
+margin_bottom = 23.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+text = "FPS:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
 [node name="Debug" type="Panel" parent="."]
-editor/display_folded = true
-material = SubResource( 9 )
+material = SubResource( 13 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -694,9 +768,9 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 10 )
+mesh = SubResource( 14 )
 skeleton = NodePath("..")
-material/0 = SubResource( 11 )
-script = ExtResource( 11 )
+material/0 = SubResource( 15 )
+script = ExtResource( 12 )
 _sections_unfolded = [ "material", "mesh" ]
 
