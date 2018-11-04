@@ -25,8 +25,10 @@ var wouldCollide: bool # Use KinematicBody to see whether we're sliding along wa
 var previousCollisionPoint: Vector3 # Used when zooming out
 var previousCollisionLength: float
 var newRotation
+var previousTargetPos: Vector3
 
 func enter():
+	
 	occlusion = false
 	ray = RayCast.new()
 	target.add_child(ray)
@@ -48,6 +50,7 @@ func exit():
 	pass
 
 func _process(_delta):
+	previousTargetPos = target.global_transform.origin
 	mouseDelta = Vector2(0,0)
 	t += _delta * 5.05
 	t = clamp(t, 0, 1)
@@ -55,10 +58,9 @@ func _process(_delta):
 #	tOut += _delta * 0.05
 #	tOut = clamp(tOut, 0, 1)
 	# |> A
+#	cameraControl(_delta)
 
-func update(_delta):
-
-	
+func cameraControl(_delta):
 	newRotation = Quat(Basis(Vector3(deg2rad(pitch), deg2rad(yaw), 0)))
 	newRotation = previousRotation.slerp(newRotation, _delta * damp)
 	previousRotation = newRotation
@@ -105,11 +107,16 @@ func update(_delta):
 		finalCamPos = target.global_transform.origin + newRotation * newOffset
 #		else:
 #			finalCamPos = desiredCamPos
-	camera.global_transform.origin = finalCamPos
-	previousCamPos = camera.global_transform.origin
-	camera.look_at(target.global_transform.origin, Vector3(0, 1, 0))
 
+#	camera.set_transform(Transform(Basis(newRotation), finalCamPos))
+	camera.global_transform.origin = finalCamPos
+	camera.look_at(target.global_transform.origin, Vector3(0, 1, 0))
 	debug()
+
+
+func update(_delta):
+	pass
+	
 
 func handle_input(_event):
 	if _event is InputEventMouseMotion:

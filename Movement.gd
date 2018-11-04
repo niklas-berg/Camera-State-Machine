@@ -34,6 +34,7 @@ func _process(delta):
 	postB = desiredPos * 1.0 * speed
 
 	preA = target.global_transform.origin
+	$"/root/Node/KinematicBody/Camera/States/UnityBoi".cameraControl(delta)
 
 func _physics_process(delta):
 #	target.global_transform.origin = target.global_transform.origin.cubic_interpolate(desiredPos, preA, postB, delta * 25.0)
