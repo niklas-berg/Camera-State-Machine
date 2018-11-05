@@ -29,7 +29,7 @@ func _process(delta):
 		dir[1] += -0.1
 	dir = dir.normalized() * 1.0
 
-	var speed = 0.50
+	var speed = 0.050
 	desiredPos += dir * 0.50 * speed
 	postB = desiredPos * 1.0 * speed
 

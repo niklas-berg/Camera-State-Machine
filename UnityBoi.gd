@@ -27,6 +27,8 @@ var previousCollisionLength: float
 var newRotation
 var previousTargetPos: Vector3
 
+var zoomOut: bool = false
+
 func enter():
 	
 	occlusion = false
@@ -38,7 +40,6 @@ func enter():
 	
 	previousRotation = Quat(camera.global_transform.basis)
 	offset = camera.global_transform.origin - target.global_transform.origin # Should only be set once
-#	offset = offset.rotated(Vector3(0,1,0), deg2rad(90))
 	
 	# This is uggu, but needed when placing quat calculations in _process().
 	# Maybe it's unecessary.
@@ -55,11 +56,6 @@ func _process(_delta):
 	t += _delta * 5.05
 	t = clamp(t, 0, 1)
 
-#	tOut += _delta * 0.05
-#	tOut = clamp(tOut, 0, 1)
-	# |> A
-#	cameraControl(_delta)
-
 func cameraControl(_delta):
 	newRotation = Quat(Basis(Vector3(deg2rad(pitch), deg2rad(yaw), 0)))
 	newRotation = previousRotation.slerp(newRotation, _delta * damp)
@@ -71,6 +67,7 @@ func cameraControl(_delta):
 
 	if(collisionPoint):
 		previousCollisionPoint = collisionPoint
+		zoomOut = true
 		previousCollisionLength = (collisionPoint - camera.global_transform.origin).length()
 		var slightNudge: float = 0.0000001
 		# checking behind KinBody
@@ -86,29 +83,19 @@ func cameraControl(_delta):
 			
 			if(t >= 0.9999):
 				occlusion = false
-			print("foo")
 		else:
-			print("bar")
 			finalCamPos = collisionPoint
+			
 	else:
-		if occlusion == true:
-#			print("We zooming out now")
-#			tOut = 0
-#			t = 1 - t
+		if zoomOut:
 			t = 0
 			t = clamp(t, 0, 1)
-#			print(previousCollisionLength)
 			previousCollisionLength = (camera.global_transform.origin - target.global_transform.origin).length()
 		occlusion = false
-#		print("t: ", t, "\ncollisionPoint: ", collisionPoint, "\n------------")
-#		if t < 0.98 && previousCollisionPoint != null:
-#			newOffset = offset.normalized() * (t*(target.global_transform.origin - desiredCamPos).length() + (1-t)*(target.global_transform.origin - previousCollisionPoint).length())
+		zoomOut = false
 		newOffset = offset.normalized() * (t*(offset).length() + (1-t)*previousCollisionLength)
 		finalCamPos = target.global_transform.origin + newRotation * newOffset
-#		else:
-#			finalCamPos = desiredCamPos
 
-#	camera.set_transform(Transform(Basis(newRotation), finalCamPos))
 	camera.global_transform.origin = finalCamPos
 	camera.look_at(target.global_transform.origin, Vector3(0, 1, 0))
 	debug()
@@ -130,9 +117,7 @@ func check_collision(desired_cam_pos: Vector3):
 	ray.force_raycast_update()
 	ray.cast_to = -(target.global_transform.origin - desired_cam_pos)
 	hit = ray.get_collision_point()
-#	write_label("Key3", "ray collision:")
 	var collider = ray.get_collider()
-#	write_label("Value3", str(collider))
 
 	if collider:
 		return hit
