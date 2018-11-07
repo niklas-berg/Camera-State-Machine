@@ -31,6 +31,14 @@ var zoomOut: bool = false
 
 func enter():
 	
+#	var out = $"/root/Node/Target" #.get_property_list()
+	print(get_node("/root/Node/Target").get_surface_material(0).set_shader_param("ScalarUniform", 1.0))
+#	var out2= get_node_and_resource("/root/Node/Target")
+	var out3 = $"/root/Node/Target".get_surface_material(0).get("shader_param/ScalarUniform")
+#	$"/root/Node/Target".get_surface_material(0).set("shader_param/ScalarUniform", 1.0)
+#	$"/root/Node/Target".get_surface_material(0).set("shader_param/ScalarUniform", 0.0)
+#	print($"/root/Node/Target".get_surface_material(0))
+	
 	occlusion = false
 	ray = RayCast.new()
 	target.add_child(ray)
@@ -99,6 +107,8 @@ func cameraControl(_delta):
 	camera.global_transform.origin = finalCamPos
 	camera.look_at(target.global_transform.origin, Vector3(0, 1, 0))
 	debug()
+	
+	
 
 
 func update(_delta):
