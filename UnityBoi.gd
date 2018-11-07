@@ -28,13 +28,14 @@ var newRotation
 var previousTargetPos: Vector3
 
 var zoomOut: bool = false
+var setOpaque: bool = true
 
 func enter():
 	
 #	var out = $"/root/Node/Target" #.get_property_list()
-	print(get_node("/root/Node/Target").get_surface_material(0).set_shader_param("ScalarUniform", 1.0))
+#	print(get_node("/root/Node/Target").get_surface_material(0).set_shader_param("ScalarUniform", 1.0))
 #	var out2= get_node_and_resource("/root/Node/Target")
-	var out3 = $"/root/Node/Target".get_surface_material(0).get("shader_param/ScalarUniform")
+#	var out3 = $"/root/Node/Target".get_surface_material(0).get("shader_param/ScalarUniform")
 #	$"/root/Node/Target".get_surface_material(0).set("shader_param/ScalarUniform", 1.0)
 #	$"/root/Node/Target".get_surface_material(0).set("shader_param/ScalarUniform", 0.0)
 #	print($"/root/Node/Target".get_surface_material(0))
@@ -108,6 +109,19 @@ func cameraControl(_delta):
 	camera.look_at(target.global_transform.origin, Vector3(0, 1, 0))
 	debug()
 	
+	fadeOutTarget()
+
+func fadeOutTarget():
+	var d = (camera.global_transform.origin - target.global_transform.origin).length()
+	var alpha = (d) / offset.length()
+	alpha = clamp(alpha, 0, 1)
+	alpha = pow((alpha + 1), 4) - 2
+	if alpha < 1.0:
+		$"/root/Node/Target".get_surface_material(0).set_shader_param("alphaBoi", alpha)
+		setOpaque = true
+	elif setOpaque: # Don't want to update shader param each frame, maybe this isn't an issue? :shrug:
+		setOpaque = false
+		$"/root/Node/Target".get_surface_material(0).set_shader_param("alphaBoi", 1.0)
 	
 
 
