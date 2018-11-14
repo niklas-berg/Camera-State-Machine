@@ -26,8 +26,8 @@ Cam_Globals="*res://Cam_Globals.gd"
 
 [display]
 
-window/size/width=800
-window/size/height=450
+window/size/width=1200
+window/size/height=800
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 
@@ -79,7 +79,9 @@ toggleFullscreen={
 
 [rendering]
 
+quality/intended_usage/framebuffer_allocation=3
 quality/reflections/high_quality_ggx=false
+quality/shading/force_vertex_shading=true
 quality/subsurface_scattering/quality=0
 quality/subsurface_scattering/weight_samples=false
 quality/voxel_cone_tracing/high_quality=false

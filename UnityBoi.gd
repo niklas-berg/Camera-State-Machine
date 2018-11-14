@@ -32,9 +32,11 @@ var zoomOut: bool = false
 var setOpaque: bool = true
 
 var theta: float = 0.0
+#var previousTransform: Transform
 
-func enter():
-	
+#func enter():
+func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	occlusion = false
 	
 	cameraRays = {'topLeft': RayCast.new(), 'topRight': RayCast.new(), 'bottomLeft': RayCast.new(), 'bottomRight': RayCast.new(), 'center': RayCast.new()}
@@ -50,24 +52,27 @@ func enter():
 	
 	# This is uggu, but needed when placing quat calculations in _process().
 	# Maybe it's unecessary.
-	newRotation = Quat(Basis(Vector3(deg2rad(pitch), deg2rad(yaw), 0)))
+	newRotation = Quat(Basis(Vector3(deg2rad(pitch), deg2rad(yaw ), 0)))
 	desiredCamPos = target.global_transform.origin + newRotation * offset
 	collisionPoint = checkCollision(desiredCamPos)
+
+#	previousTransform = Transform(Basis(previousRotation), desiredCamPos )
 
 func exit():
 	pass
 
 func _process(_delta):
 #	yaw += _delta * 10
+	pass
+
+func cameraControl(_delta):
 	mouseDelta = Vector2(0, 0)
 	t += _delta * 5.05
 	t = clamp(t, 0, 1)
 
-	if(Input.is_action_just_released("toggleFullscreen")):
-		OS.window_fullscreen = !OS.window_fullscreen
 
-func cameraControl(_delta):
-	newRotation = Quat(Basis(Vector3(deg2rad(pitch), deg2rad(yaw), 0)))
+	
+	newRotation = Quat(Basis(Vector3(deg2rad(pitch * _delta * 100), deg2rad(yaw * _delta * 100), 0)))
 	newRotation = previousRotation.slerp(newRotation, _delta * damp)
 	previousRotation = newRotation
 
@@ -110,11 +115,16 @@ func cameraControl(_delta):
 		newOffset = offset.normalized() * (t*(offset).length() + (1-t)*previousCollisionLength)
 		finalCamPos = target.global_transform.origin + newRotation * newOffset
 
-	camera.global_transform.origin = finalCamPos
+#	var tr = previousTransform.interpolate_with(Transform(Basis(newRotation), finalCamPos), _delta)
+	var tr = Transform(Basis(newRotation), finalCamPos)
+	camera.set_global_transform(tr)
+#	previousTransform = tr
+#	camera.global_transform.origin = finalCamPos
 	camera.look_at(target.global_transform.origin, Vector3(0, 1, 0))
 
+
 	fadeOutTarget()
-	debug()
+	debug(_delta)
 	
 
 func fadeOutTarget():
@@ -134,7 +144,7 @@ func update(_delta):
 	pass
 	
 
-func handle_input(_event):
+func _input(_event):
 	if _event is InputEventMouseMotion:
 		mouseDelta = _event.relative
 	yaw -= mouseDelta.x * mouseSens
@@ -192,11 +202,9 @@ func checkOcclusion(collisionPoint):
 func write_label(label, content):
 	get_node("/root/Node/Debug").get_node(label).set_text(content)
 	
-func debug():	
-	write_label("Key1", "collision: ")
-	write_label("Value1", str(hit))
-#	write_label("Key2", "distance:")
-#	write_label("Value2", str(get_node("/root/Node/KinematicBody/Camera").get_global_transform().origin.distance_to(target.global_transform.origin)))
+func debug(delta):	
+	write_label("Key1", "delta: ")
+	write_label("Value1", str(delta))
 	write_label("Key2", "cam pos:")
 	write_label("Value2", str(camera.global_transform.origin))
 	write_label("Key3", "distance:")

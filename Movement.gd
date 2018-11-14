@@ -8,11 +8,22 @@ var postB: Vector3
 var dir: Vector3
 onready var target: Spatial = get_node("/root/Node/Target")
 
+var vel: Vector3
+
 func _ready():
 	desiredPos = target.global_transform.origin
 	preA = target.global_transform.origin
+	prevPos = global_transform.origin
 	
 func _input(event):
+	if(Input.is_action_just_released("toggleFullscreen")):
+		OS.window_fullscreen = !OS.window_fullscreen
+
+	
+func _process(delta):
+	pass
+
+func _physics_process(delta):
 	camera = $"/root/Node/KinematicBody/Camera".global_transform.basis
 	dir = Vector3(0,0,0)
 	if(Input.is_action_pressed("ui_up")):
@@ -28,19 +39,13 @@ func _input(event):
 	if(Input.is_action_pressed("crouch")):
 		dir[1] += -0.1
 	dir = dir.normalized() * 1.0
-	
-func _process(delta):
+
 	var speed = 0.250
-	desiredPos += dir * 0.50 * speed
-	postB = desiredPos * 1.0 * speed
-	preA = target.global_transform.origin
+	desiredPos += dir * 10.50 * speed * delta
+	vel = desiredPos - prevPos
 	
-	
-	
-
-func _physics_process(delta):
-	target.global_transform.origin = target.global_transform.origin.cubic_interpolate(desiredPos, preA, postB, delta * 25.0)
-#	target.global_transform.origin = desiredPos
-	$"/root/Node/KinematicBody/Camera/States/UnityBoi".cameraControl(delta)
-
+	translate(vel * delta)
+#	global_transform.origin = desiredPos
+	prevPos = global_transform.origin
+#	$"/root/Node/KinematicBody/Camera/States/UnityBoi".cameraControl(delta)
 	

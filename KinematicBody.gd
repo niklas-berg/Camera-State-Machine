@@ -14,7 +14,6 @@ func _physics_process(delta):
 	if useKinematics:
 		move_and_slide(velocity)
 
-	
 func move(vel):
 #	move_and_slide(velocity)
 	pass
