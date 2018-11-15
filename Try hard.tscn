@@ -91,7 +91,7 @@ adjustment_enabled = false
 adjustment_brightness = 1.0
 adjustment_contrast = 1.0
 adjustment_saturation = 1.0
-_sections_unfolded = [ "Background" ]
+_sections_unfolded = [ "Background", "SSAO" ]
 
 [sub_resource type="PrismMesh" id=2]
 
@@ -471,7 +471,7 @@ h_offset = 0.0
 v_offset = 0.0
 doppler_tracking = 0
 projection = 0
-current = true
+current = false
 fov = 70.0
 size = 1.0
 near = 0.05
@@ -504,7 +504,7 @@ h_offset = 0.0
 v_offset = 0.0
 doppler_tracking = 0
 projection = 0
-current = false
+current = true
 fov = 70.0
 size = 1.0
 near = 0.05

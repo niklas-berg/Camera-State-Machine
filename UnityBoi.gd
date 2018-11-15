@@ -32,7 +32,8 @@ var zoomOut: bool = false
 var setOpaque: bool = true
 
 var theta: float = 0.0
-#var previousTransform: Transform
+
+var prevMouse
 
 #func enter():
 func _ready():
@@ -58,14 +59,12 @@ func _ready():
 
 #	previousTransform = Transform(Basis(previousRotation), desiredCamPos )
 
-func exit():
-	pass
-
-func _process(_delta):
-#	yaw += _delta * 10
-	pass
-
 func cameraControl(_delta):
+	
+
+#	getNormalizedMousePosition()
+
+
 	mouseDelta = Vector2(0, 0)
 	t += _delta * 5.05
 	t = clamp(t, 0, 1)
@@ -139,17 +138,13 @@ func fadeOutTarget():
 		setOpaque = false
 		$"/root/Node/Target".get_surface_material(0).set_shader_param("alphaBoi", 1.0)
 	
-
-func update(_delta):
-	pass
-	
-
 func _input(_event):
 	if _event is InputEventMouseMotion:
 		mouseDelta = _event.relative
+		print("ASDASDAS")
 	yaw -= mouseDelta.x * mouseSens
 	pitch += mouseDelta.y * mouseSens
-	pitch = clamp(pitch, -30, 70)
+	pitch = clamp(pitch, -30, 30)
 
 func checkCollision(desired_cam_pos: Vector3):
 	
@@ -195,9 +190,6 @@ func checkCollision(desired_cam_pos: Vector3):
 		return null
 	else:
 		return d
-
-func checkOcclusion(collisionPoint):
-	pass
 
 func write_label(label, content):
 	get_node("/root/Node/Debug").get_node(label).set_text(content)

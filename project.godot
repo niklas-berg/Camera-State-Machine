@@ -17,17 +17,22 @@ _global_script_class_icons={
 
 config/name="Camera Tryouts"
 run/main_scene="res://Try hard.tscn"
-run/low_processor_mode=true
+run/low_processor_mode_sleep_usec=0
 config/icon="res://icon.png"
 
 [autoload]
 
 Cam_Globals="*res://Cam_Globals.gd"
 
+[debug]
+
+settings/fps/force_fps=60
+settings/stdout/print_fps=true
+
 [display]
 
-window/size/width=1200
-window/size/height=800
+window/size/width=800
+window/size/height=450
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 
@@ -80,6 +85,12 @@ toggleFullscreen={
 [rendering]
 
 quality/intended_usage/framebuffer_allocation=3
+threads/thread_model=0
+vram_compression/import_bptc=true
+vram_compression/import_etc=true
+vram_compression/import_pvrtc=true
+quality/shadows/filter_mode=0
+quality/reflections/texture_array_reflections=false
 quality/reflections/high_quality_ggx=false
 quality/shading/force_vertex_shading=true
 quality/subsurface_scattering/quality=0
