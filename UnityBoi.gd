@@ -1,7 +1,7 @@
 extends Node
 
 onready var camera: Spatial = get_node("/root/Node/KinematicBody/Camera")
-onready var target: Spatial = get_node("/root/Node/Target")
+onready var target: Spatial = get_node("/root/Node/Player")
 
 var mouseDelta: Vector2
 export var mouseSens: float = 1.0
@@ -132,16 +132,16 @@ func fadeOutTarget():
 	alpha = clamp(alpha, 0, 1)
 	alpha = pow((alpha + 1), 4) - 2
 	if alpha < 1.0:
-		$"/root/Node/Target".get_surface_material(0).set_shader_param("alphaBoi", alpha)
+		$"/root/Node/Player/PrismBoi".get_surface_material(0).set_shader_param("alphaBoi", alpha)
 		setOpaque = true
 	elif setOpaque: # Don't want to update shader param each frame, maybe this isn't an issue? :shrug:
 		setOpaque = false
-		$"/root/Node/Target".get_surface_material(0).set_shader_param("alphaBoi", 1.0)
+		$"/root/Node/Player/PrismBoi".get_surface_material(0).set_shader_param("alphaBoi", 1.0)
 	
 func _input(_event):
 	if _event is InputEventMouseMotion:
 		mouseDelta = _event.relative
-		print("ASDASDAS")
+
 	yaw -= mouseDelta.x * mouseSens
 	pitch += mouseDelta.y * mouseSens
 	pitch = clamp(pitch, -30, 30)

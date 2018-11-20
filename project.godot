@@ -27,7 +27,6 @@ Cam_Globals="*res://Cam_Globals.gd"
 [debug]
 
 settings/fps/force_fps=60
-settings/stdout/print_fps=true
 
 [display]
 

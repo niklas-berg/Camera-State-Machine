@@ -1,0 +1,22 @@
+shader_type spatial;
+//render_mode blend_add,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
+render_mode unshaded;
+
+varying vec3 color;
+
+void vertex() {
+//	UV=UV*uv1_scale.xy+uv1_offset.xy;
+	color = NORMAL;
+}
+
+uniform float alphaBoi;
+
+void fragment() {
+	ALBEDO = color;
+//	vec2 base_uv = UV;
+//	vec4 albedo_tex = texture(texture_albedo,base_uv);
+//	ALBEDO = albedo.rgb * albedo_tex.rgb;
+//	ALPHA = albedo.a * albedo_tex.a;
+	ALPHA = alphaBoi;
+
+}

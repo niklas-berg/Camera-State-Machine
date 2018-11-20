@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://Movement.gd" type="Script" id=1]
 [ext_resource path="res://KinematicBody.gd" type="Script" id=2]
@@ -93,54 +93,58 @@ adjustment_contrast = 1.0
 adjustment_saturation = 1.0
 _sections_unfolded = [ "Background", "SSAO" ]
 
-[sub_resource type="PrismMesh" id=2]
+[sub_resource type="CapsuleShape" id=2]
+
+margin = 0.04
+radius = 1.0
+height = 1.0
+
+[sub_resource type="CapsuleMesh" id=3]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
-left_to_right = 0.5
-size = Vector3( 2, 2, 2 )
-subdivide_width = 0
-subdivide_height = 0
-subdivide_depth = 0
+radius = 1.0
+mid_height = 1.0
+radial_segments = 64
+rings = 8
 
-[sub_resource type="Shader" id=3]
+[sub_resource type="Shader" id=4]
 
 code = "shader_type spatial;
-//render_mode blend_add,depth_draw_opaque,cull_back,diffuse_burley,specular_schlick_ggx;
 render_mode unshaded;
 
 varying vec3 color;
 
 void vertex() {
-//	UV=UV*uv1_scale.xy+uv1_offset.xy;
-	color = NORMAL;
+//	color = vec3(NORMAL.x * cos(TIME), NORMAL.y, NORMAL.z * sin(TIME));
+//	NORMAL = (MODELVIEW_MATRIX * vec4(VERTEX, 0.0)).xyz;
+	mat3 R_x = mat3(vec3(1, 0, 0), vec3(0, cos(TIME), -sin(TIME)), vec3(0, sin(TIME), cos(TIME)));
+	mat3 R_y = mat3(vec3(cos(TIME), 0, sin(TIME)), vec3(0, 1, 0), vec3(-sin(TIME), 0, cos(TIME)));
+	mat3 R_z = mat3(vec3(cos(TIME), -sin(TIME), 0), vec3(sin(TIME), cos(TIME), 0), vec3(0, 0, 1));
+	color = R_z * NORMAL;
 }
 
 uniform float alphaBoi;
 
 void fragment() {
 	ALBEDO = color;
-//	vec2 base_uv = UV;
-//	vec4 albedo_tex = texture(texture_albedo,base_uv);
-//	ALBEDO = albedo.rgb * albedo_tex.rgb;
-//	ALPHA = albedo.a * albedo_tex.a;
 	ALPHA = alphaBoi;
-
 }
 "
 
-[sub_resource type="ShaderMaterial" id=4]
+[sub_resource type="ShaderMaterial" id=5]
 
 render_priority = 0
-shader = SubResource( 3 )
-shader_param/alphaBoi = 1.0
+shader = SubResource( 4 )
+shader_param/alphaBoi = null
+_sections_unfolded = [ "shader" ]
 
-[sub_resource type="SphereShape" id=5]
+[sub_resource type="SphereShape" id=6]
 
 margin = 0.04
 radius = 1.0
 
-[sub_resource type="CubeMesh" id=6]
+[sub_resource type="CubeMesh" id=7]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
@@ -149,7 +153,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="SpatialMaterial" id=7]
+[sub_resource type="SpatialMaterial" id=8]
 
 render_priority = 0
 flags_transparent = false
@@ -205,12 +209,12 @@ proximity_fade_enable = false
 distance_fade_mode = 0
 _sections_unfolded = [ "Flags" ]
 
-[sub_resource type="ConvexPolygonShape" id=8]
+[sub_resource type="ConvexPolygonShape" id=9]
 
 margin = 0.04
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
-[sub_resource type="CubeMesh" id=9]
+[sub_resource type="CubeMesh" id=10]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
@@ -219,7 +223,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="SpatialMaterial" id=10]
+[sub_resource type="SpatialMaterial" id=11]
 
 render_priority = 0
 flags_transparent = false
@@ -275,12 +279,12 @@ proximity_fade_enable = false
 distance_fade_mode = 0
 _sections_unfolded = [ "Albedo" ]
 
-[sub_resource type="ConvexPolygonShape" id=11]
+[sub_resource type="ConvexPolygonShape" id=12]
 
 margin = 0.04
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
-[sub_resource type="SpatialMaterial" id=12]
+[sub_resource type="SpatialMaterial" id=13]
 
 render_priority = 0
 flags_transparent = false
@@ -336,16 +340,16 @@ uv2_triplanar_sharpness = 1.0
 proximity_fade_enable = false
 distance_fade_mode = 0
 
-[sub_resource type="PlaneMesh" id=13]
+[sub_resource type="PlaneMesh" id=14]
 
-material = SubResource( 12 )
+material = SubResource( 13 )
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
 size = Vector2( 2, 2 )
 subdivide_width = 0
 subdivide_depth = 0
 
-[sub_resource type="Shader" id=14]
+[sub_resource type="Shader" id=15]
 
 code = "shader_type canvas_item;
 render_mode blend_mix;
@@ -356,12 +360,12 @@ void fragment(){
 }
 "
 
-[sub_resource type="ShaderMaterial" id=15]
+[sub_resource type="ShaderMaterial" id=16]
 
 render_priority = 0
-shader = SubResource( 14 )
+shader = SubResource( 15 )
 
-[sub_resource type="Shader" id=16]
+[sub_resource type="Shader" id=17]
 
 code = "shader_type canvas_item;
 render_mode blend_mix;
@@ -372,12 +376,12 @@ void fragment(){
 }
 "
 
-[sub_resource type="ShaderMaterial" id=17]
+[sub_resource type="ShaderMaterial" id=18]
 
 render_priority = 0
-shader = SubResource( 16 )
+shader = SubResource( 17 )
 
-[sub_resource type="CubeMesh" id=18]
+[sub_resource type="CubeMesh" id=19]
 
 custom_aabb = AABB( 0, 0, 0, 0, 0, 0 )
 flip_faces = false
@@ -386,7 +390,7 @@ subdivide_width = 0
 subdivide_height = 0
 subdivide_depth = 0
 
-[sub_resource type="SpatialMaterial" id=19]
+[sub_resource type="SpatialMaterial" id=20]
 
 render_priority = 0
 flags_transparent = false
@@ -447,7 +451,26 @@ distance_fade_mode = 0
 environment = SubResource( 1 )
 _sections_unfolded = [ "environment" ]
 
-[node name="Target" type="MeshInstance" parent="."]
+[node name="Player" type="KinematicBody" parent="."]
+input_ray_pickable = true
+input_capture_on_drag = false
+collision_layer = 2
+collision_mask = 2
+move_lock_x = false
+move_lock_y = false
+move_lock_z = false
+collision/safe_margin = 0.005
+script = ExtResource( 1 )
+_sections_unfolded = [ "Collision", "collision" ]
+
+[node name="CollisionShape" type="CollisionShape" parent="Player"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-008, -1, 0, 1, -4.37114e-008, 0, 0, 0 )
+shape = SubResource( 2 )
+disabled = false
+_sections_unfolded = [ "Visibility" ]
+
+[node name="PrismBoi" type="MeshInstance" parent="Player"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-008, -1, 0, 1, -4.37114e-008, 0, 0, 0 )
 layers = 1
 material_override = null
 cast_shadow = 1
@@ -457,12 +480,12 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 2 )
+mesh = SubResource( 3 )
 skeleton = NodePath("..")
-material/0 = SubResource( 4 )
-script = ExtResource( 1 )
+material/0 = SubResource( 5 )
+_sections_unfolded = [ "Transform", "material" ]
 
-[node name="CamBoi" type="Camera" parent="Target"]
+[node name="CamBoi" type="Camera" parent="Player/PrismBoi"]
 transform = Transform( -1, 3.55271e-015, -8.74228e-008, -3.55059e-008, 0.913811, 0.40614, 7.98879e-008, 0.40614, -0.913811, 0, 5.29356, -8.68446 )
 keep_aspect = 1
 cull_mask = 1048575
@@ -479,6 +502,7 @@ far = 100.0
 _sections_unfolded = [ "Transform" ]
 
 [node name="KinematicBody" type="KinematicBody" parent="."]
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10 )
 input_ray_pickable = true
 input_capture_on_drag = false
@@ -492,7 +516,7 @@ script = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="KinematicBody"]
 transform = Transform( 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 2.56764 )
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 disabled = false
 
 [node name="Camera" type="Camera" parent="KinematicBody"]
@@ -570,9 +594,9 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 6 )
+mesh = SubResource( 7 )
 skeleton = NodePath("..")
-material/0 = SubResource( 7 )
+material/0 = SubResource( 8 )
 _sections_unfolded = [ "material" ]
 
 [node name="StaticBody" type="StaticBody" parent="A"]
@@ -585,7 +609,7 @@ constant_linear_velocity = Vector3( 0, 0, 0 )
 constant_angular_velocity = Vector3( 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="A/StaticBody"]
-shape = SubResource( 8 )
+shape = SubResource( 9 )
 disabled = false
 
 [node name="B" type="MeshInstance" parent="."]
@@ -600,9 +624,9 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 9 )
+mesh = SubResource( 10 )
 skeleton = NodePath("..")
-material/0 = SubResource( 10 )
+material/0 = SubResource( 11 )
 _sections_unfolded = [ "material" ]
 
 [node name="StaticBody" type="StaticBody" parent="B"]
@@ -615,7 +639,7 @@ constant_linear_velocity = Vector3( 0, 0, 0 )
 constant_angular_velocity = Vector3( 0, 0, 0 )
 
 [node name="CollisionShape" type="CollisionShape" parent="B/StaticBody"]
-shape = SubResource( 11 )
+shape = SubResource( 12 )
 disabled = false
 
 [node name="Floor" type="MeshInstance" parent="."]
@@ -629,13 +653,13 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 13 )
+mesh = SubResource( 14 )
 skeleton = NodePath("..")
 material/0 = null
 
 [node name="FpsPanel" type="Panel" parent="."]
 editor/display_folded = true
-material = SubResource( 15 )
+material = SubResource( 16 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -691,7 +715,7 @@ max_lines_visible = -1
 
 [node name="Debug" type="Panel" parent="."]
 editor/display_folded = true
-material = SubResource( 17 )
+material = SubResource( 18 )
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -905,8 +929,8 @@ lod_min_distance = 0.0
 lod_min_hysteresis = 0.0
 lod_max_distance = 0.0
 lod_max_hysteresis = 0.0
-mesh = SubResource( 18 )
+mesh = SubResource( 19 )
 skeleton = NodePath("..")
-material/0 = SubResource( 19 )
+material/0 = SubResource( 20 )
 _sections_unfolded = [ "material" ]
 
